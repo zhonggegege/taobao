@@ -1,0 +1,36 @@
+# 项目目录结构
+- /node_modules                    # Node.js项目的依赖库
+- /public                          # 存放静态文件
+  - /css                           # 样式表
+  - /js                            # 前端JavaScript文件
+  - /images                        # 图片资源
+- /src                             # 源码目录
+  - /config                        # 存放配置文件
+      - index.js                   # 配置文件入口
+  - /controllers                   # 控制器文件夹，用于处理API请求逻辑
+      - searchController.js        # 处理搜索相关请求
+  - /models                        # 数据模型文件夹，定义数据结构
+      - productModel.js            # 商品数据模型
+  - /routes                        # 路由文件夹，定义API端点
+      - index.js                   # 路由入口，聚合所有子路由
+      - searchRoutes.js            # 处理搜索相关路由
+  - /services                      # 服务层，处理业务逻辑
+      - tbkService.js              # 淘宝客服务，处理API调用
+      - activityInfoService.js     # 获取官方活动推广链接的服务模块
+      - cpOrderDetailsService.js   # 查询服务费订单的明细服务模块
+      - itemShareConvertService.js # 转换和获取商品的三方分成链接模块
+      - optimusMaterialService.js  # 提供物料精选的功能模块
+      - optimusPromotionService.js # 用于获取权益物料的精选推广信息服务模块
+      - orderDetailsService.js     # 用于查询所有订单详情模块
+      - rtaConsumerMatchService.js # 用于发布定向活动目标服务模块
+      - searchService.js           # 根据关键字查询商品信息的服务模块
+      - tpwdShareConvertService.js # 淘口令解析&三方分成转链
+  - /utils                         # 工具类，如API签名工具
+      - signUtils.js               # 用来签名API请求的工具方法
+  - app.js                         # 程序入口，启动服务器
+- /views                           # 前端模板文件夹
+  - index.html                     # 主页HTML文件
+- .env                             # 环境变量配置文件
+- package.json                     # Node.js项目描述和依赖信息
+- README.md                        # 项目说明文件
+

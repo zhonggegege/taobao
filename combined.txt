@@ -1,0 +1,1116 @@
+# 项目文件结构
+**File Name:** actions.sql
+  - **Path:** ./actions.sql
+- **File Name:** products.sql
+  - **Path:** ./products.sql
+- **File Name:** users.sql
+  - **Path:** ./users.sql
+- **File Name:** .env
+  - **Path:** ./.env
+- **File Name:** app.js
+  - **Path:** ./src/app.js
+- **File Name:** tpwdShareConvertService.js
+  - **Path:** ./src/services/tpwdShareConvertService.js
+- **File Name:** optimusMaterialService.js
+  - **Path:** ./src/services/optimusMaterialService.js
+- **File Name:** orderDetailsService.js
+  - **Path:** ./src/services/orderDetailsService.js
+- **File Name:** itemShareConvertService.js
+  - **Path:** ./src/services/itemShareConvertService.js
+- **File Name:** rtaConsumerMatchService.js
+  - **Path:** ./src/services/rtaConsumerMatchService.js
+- **File Name:** optimusPromotionService.js
+  - **Path:** ./src/services/optimusPromotionService.js
+- **File Name:** tbkservice.js
+  - **Path:** ./src/services/tbkservice.js
+- **File Name:** activityInfoService.js
+  - **Path:** ./src/services/activityInfoService.js
+- **File Name:** searchService.js
+  - **Path:** ./src/services/searchService.js
+- **File Name:** cpOrderDetailsService.js
+  - **Path:** ./src/services/cpOrderDetailsService.js
+- **File Name:** statisticsService.js
+  - **Path:** ./src/services/statisticsService.js
+- **File Name:** index.js
+  - **Path:** ./src/routes/index.js
+- **File Name:** searchRoutes.js
+  - **Path:** ./src/routes/searchRoutes.js
+- **File Name:** db.js
+  - **Path:** ./src/config/db.js
+- **File Name:** index.js
+  - **Path:** ./src/config/index.js
+- **File Name:** productController.js
+  - **Path:** ./src/controllers/productController.js
+- **File Name:** orderController.js
+  - **Path:** ./src/controllers/orderController.js
+- **File Name:** promotionController.js
+  - **Path:** ./src/controllers/promotionController.js
+- **File Name:** searchController.js
+  - **Path:** ./src/controllers/searchController.js
+- **File Name:** productModel.js
+  - **Path:** ./src/models/productModel.js
+- **File Name:** userActionModel.js
+  - **Path:** ./src/models/userActionModel.js
+- **File Name:** userModel.js
+  - **Path:** ./src/models/userModel.js
+- **File Name:** signUtils.js
+  - **Path:** ./utils/signUtils.js
+- **File Name:** tbkApiRequest.js
+  - **Path:** ./utils/tbkApiRequest.js
+-----------------------------   分隔符   ---------------------
+
+# 补充项目目录结构说明（不全）
+# 项目目录结构
+- /node_modules                    # Node.js项目的依赖库
+- /public                          # 存放静态文件
+  - /css                           # 样式表
+  - /js                            # 前端JavaScript文件
+  - /images                        # 图片资源
+- /src                             # 源码目录
+  - /config                        # 存放配置文件
+      - index.js                   # 配置文件入口
+  - /controllers                   # 控制器文件夹，用于处理API请求逻辑
+      - searchController.js        # 处理搜索相关请求
+  - /models                        # 数据模型文件夹，定义数据结构
+      - productModel.js            # 商品数据模型
+  - /routes                        # 路由文件夹，定义API端点
+      - index.js                   # 路由入口，聚合所有子路由
+      - searchRoutes.js            # 处理搜索相关路由
+  - /services                      # 服务层，处理业务逻辑
+      - tbkService.js              # 淘宝客服务，处理API调用
+      - activityInfoService.js     # 获取官方活动推广链接的服务模块
+      - cpOrderDetailsService.js   # 查询服务费订单的明细服务模块
+      - itemShareConvertService.js # 转换和获取商品的三方分成链接模块
+      - optimusMaterialService.js  # 提供物料精选的功能模块
+      - optimusPromotionService.js # 用于获取权益物料的精选推广信息服务模块
+      - orderDetailsService.js     # 用于查询所有订单详情模块
+      - rtaConsumerMatchService.js # 用于发布定向活动目标服务模块
+      - searchService.js           # 根据关键字查询商品信息的服务模块
+      - tpwdShareConvertService.js # 淘口令解析&三方分成转链
+  - /utils                         # 工具类，如API签名工具
+      - signUtils.js               # 用来签名API请求的工具方法
+  - app.js                         # 程序入口，启动服务器
+- /views                           # 前端模板文件夹
+  - index.html                     # 主页HTML文件
+- .env                             # 环境变量配置文件
+- package.json                     # Node.js项目描述和依赖信息
+- README.md                        # 项目说明文件
+-----------------------------   分隔符   ---------------------
+
+# 代码实现文本
+// 文件路径: /app.js
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const dotenv = require('dotenv');
+// 引入路由
+const searchRoutes = require('./src/routes/searchRoutes');
+const app = express();
+
+// 配置环境变量
+dotenv.config();
+
+// 配置跨域中间件
+app.use(cors());
+
+// 配置解析JSON请求体的中间件
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// 设置静态文件目录
+app.use(express.static('public'));
+
+// 使用路由
+app.use('/api', searchRoutes);
+
+// 以下代码连接数据库（伪代码，需要根据实际情况实现）
+// const db = require('./src/config/db'); // 引入数据库配置文件
+// db.connect(); // 连接数据库
+
+// 错误处理中间件
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+// 启动服务器
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}.`);
+});
+
+module.exports = app;
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/services/tpwdShareConvertService.js 用于解析淘口令并进行三方分成转链
+
+const axios = require('axios');
+const crypto = require('crypto');
+require('dotenv').config();
+
+// 从环境变量中读取淘宝客API的AppKey和AppSecret
+const APP_KEY = process.env.TBK_APP_KEY;
+const APP_SECRET = process.env.TBK_APP_SECRET;
+
+/**
+ * 使用MD5算法生成签名
+ * @param {Object} params - 请求参数
+ * @return {string} - 签名字符串
+ */
+function generateSignature(params) {
+  const orderedParams = Object.keys(params).sort().map(key => `${key}${params[key]}`).join('');
+  return crypto.createHash('md5').update(APP_SECRET + orderedParams + APP_SECRET, 'utf8').digest('hex').toUpperCase();
+}
+
+/**
+ * 解析淘口令并进行三方分成转链
+ * @param {Object} options - 请求选项，未指定则使用默认值
+ * @return {Promise<Object>} - 调用API后返回的数据或错误对象
+ */
+async function tpwdShareConvert(options = {}) {
+  const defaultOptions = {
+    password_content: '', // 淘口令内容，必填参数
+    adzone_id: '', // 推广位ID，必填参数
+    // 其他默认参数如特殊需求等可以在这里设置
+  };
+
+  const finalOptions = {
+    ...defaultOptions,
+    ...options,
+    method: 'taobao.tbk.tpwd.share.convert',
+    app_key: APP_KEY,
+    timestamp: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
+    format: 'json',
+    v: '2.0',
+    sign_method: 'md5'
+  };
+
+  finalOptions.sign = generateSignature(finalOptions); // 生成签名
+
+  try {
+    const response = await axios.get('http://gw.api.taobao.com/router/rest', { params: finalOptions });
+    console.log('API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error converting tpwd share: ', error);
+    throw error;
+  }
+}
+
+module.exports = tpwdShareConvert;
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/services/optimusMaterialService.js 提供物料精选的功能模块
+
+const axios = require('axios');
+const crypto = require('crypto');
+require('dotenv').config();
+
+// 从环境变量中读取淘宝客API的AppKey和AppSecret和AdzoneId
+const APP_KEY = process.env.TBK_APP_KEY;
+const APP_SECRET = process.env.TBK_APP_SECRET;
+const ADZONE_ID = process.env.TBK_ADZONE_ID;  // 推广位ID
+
+/**
+ * 使用MD5算法生成签名
+ * @param {Object} params - 请求参数
+ * @return {string} - 签名字符串
+ */
+function generateSignature(params) {
+  const orderedParams = Object.keys(params).sort().map(key => `${key}${params[key]}`).join('');
+  return crypto.createHash('md5').update(APP_SECRET + orderedParams + APP_SECRET, 'utf8').digest('hex').toUpperCase();
+}
+
+/**
+ * 获取系统优选的物料精选推广，参数可从外部传入，若未传则使用默认值
+ * @param {Object} options - 物料请求选项，未指定则使用默认值
+ * @return {Promise<Object>} - 调用API后返回的数据或错误对象
+ */
+async function optimusMaterial(options = {}) {
+  const defaultOptions = {
+    material_id: '',    // 物料ID，默认为空，需要指定
+    page_no: 1,         // 结果页码，默认为1
+    page_size: 20,      // 每页结果数，默认为20
+  };
+
+  const finalOptions = {
+    ...defaultOptions,
+    ...options,
+    method: 'taobao.tbk.dg.optimus.material',
+    app_key: APP_KEY,
+    timestamp: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
+    format: 'json',
+    v: '2.0',
+    sign_method: 'md5',
+    adzone_id: ADZONE_ID, // 推广位ID
+  };
+
+  finalOptions.sign = generateSignature(finalOptions); // 生成签名
+
+  try {
+    const response = await axios.get('http://gw.api.taobao.com/router/rest', { params: finalOptions });
+    console.log('API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting optimus material: ', error);
+    throw error;
+  }
+}
+
+module.exports = optimusMaterial;
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/services/orderDetailsService.js 用于查询所有订单详情
+
+const axios = require('axios');
+const crypto = require('crypto');
+require('dotenv').config();
+
+// 从环境变量中读取淘宝客API的AppKey和AppSecret
+const APP_KEY = process.env.TBK_APP_KEY;
+const APP_SECRET = process.env.TBK_APP_SECRET;
+
+/**
+ * 使用MD5算法生成签名
+ * @param {Object} params - 请求参数
+ * @return {string} - 签名字符串
+ */
+function generateSignature(params) {
+  const orderedParams = Object.keys(params).sort().map(key => `${key}${params[key]}`).join('');
+  return crypto.createHash('md5').update(APP_SECRET + orderedParams + APP_SECRET, 'utf8').digest('hex').toUpperCase();
+}
+
+/**
+ * 查询所有订单详情
+ * @param {Object} options - 请求选项，未指定则使用默认值
+ * @return {Promise<Object>} - 调用API后返回的数据或错误对象
+ */
+async function getOrderDetails(options = {}) {
+  const defaultOptions = {
+    fields: 'trade_parent_id,trade_id,num_iid,item_title,item_num,price,pay_price,commission_rate,commission,unid,paid_time', // 查询字段，默认为全部字段
+    start_time: new Date().toISOString().split('T')[0] + ' 00:00:00', // 查询开始时间，默认为当天
+    end_time: new Date().toISOString().split('T')[0] + ' 23:59:59', // 查询结束时间，默认为当天
+    page_no: 1, // 页数，默认为1
+    page_size: 100, // 每页大小，默认为100，最大值1000
+    // 其他可根据需要添加的默认参数
+  };
+
+  const finalOptions = {
+    ...defaultOptions,
+    ...options,
+    method: 'taobao.tbk.order.details.get',
+    app_key: APP_KEY,
+    timestamp: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
+    format: 'json',
+    v: '2.0',
+    sign_method: 'md5'
+  };
+
+  finalOptions.sign = generateSignature(finalOptions); // 生成签名
+
+  try {
+    const response = await axios.get('http://gw.api.taobao.com/router/rest', { params: finalOptions });
+    console.log('API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting order details: ', error);
+    throw error;
+  }
+}
+
+module.exports = getOrderDetails;
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/services/itemShareConvertService.js 用于转换和获取商品的三方分成链接
+
+const axios = require('axios');
+const crypto = require('crypto');
+require('dotenv').config();
+
+// 从环境变量中读取淘宝客API的AppKey和AppSecret和AdzoneId
+const APP_KEY = process.env.TBK_APP_KEY;
+const APP_SECRET = process.env.TBK_APP_SECRET;
+const ADZONE_ID = process.env.TBK_ADZONE_ID; // 推广位ID
+
+/**
+ * 使用MD5算法生成签名
+ * @param {Object} params - 请求参数
+ * @return {string} - 签名字符串
+ */
+function generateSignature(params) {
+  const orderedParams = Object.keys(params).sort().map(key => `${key}${params[key]}`).join('');
+  return crypto.createHash('md5').update(APP_SECRET + orderedParams + APP_SECRET, 'utf8').digest('hex').toUpperCase();
+}
+
+/**
+ * 转换和获取商品的三方分成链接
+ * @param {Object} options - 请求选项，未指定则使用默认值
+ * @return {Promise<Object>} - 调用API后返回的数据或错误对象
+ */
+async function itemShareConvert(options = {}) {
+  const defaultOptions = {
+    num_iids: '',     // 商品ID，用逗号分割，最多支持传入40个，默认为空
+    adzone_id: ADZONE_ID, // 推广位ID
+    // 如果有其他默认参数，可以在这里添加
+  };
+
+  const finalOptions = {
+    ...defaultOptions,
+    ...options,
+    method: 'taobao.tbk.item.share.convert',
+    app_key: APP_KEY,
+    timestamp: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
+    format: 'json',
+    v: '2.0',
+    sign_method: 'md5'
+  };
+
+  finalOptions.sign = generateSignature(finalOptions); // 生成签名
+
+  try {
+    const response = await axios.get('http://gw.api.taobao.com/router/rest', { params: finalOptions });
+    console.log('API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error converting item share: ', error);
+    throw error;
+  }
+}
+
+module.exports = itemShareConvert;
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/services/rtaConsumerMatchService.js   接口taobao.tbk.rta.consumer.match 用于发布定向活动目标。
+
+const axios = require('axios');
+const crypto = require('crypto');
+require('dotenv').config();
+
+// 从环境变量中读取淘宝客API的AppKey和AppSecret
+const APP_KEY = process.env.TBK_APP_KEY;
+const APP_SECRET = process.env.TBK_APP_SECRET;
+
+/**
+ * 使用MD5算法生成签名
+ * @param {Object} params - 请求参数
+ * @return {string} - 签名字符串
+ */
+function generateSignature(params) {
+  const orderedParams = Object.keys(params).sort().map(key => `${key}${params[key]}`).join('');
+  return crypto.createHash('md5').update(APP_SECRET + orderedParams + APP_SECRET, 'utf8').digest('hex').toUpperCase();
+}
+
+/**
+ * 定向活动目标发布
+ * @param {Object} options - 调用API的选项参数
+ * @return {Promise<Object>} - 调用API后返回的数据或错误对象
+ */
+async function rtaConsumerMatch(options) {
+  const params = {
+    method: 'taobao.tbk.rta.consumer.match',
+    app_key: APP_KEY,
+    timestamp: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
+    format: 'json',
+    v: '2.0',
+    sign_method: 'md5',
+    // 根据API文档添加更多需要的参数...
+    ...options
+  };
+
+  params.sign = generateSignature(params);
+
+  try {
+    const response = await axios.get('http://gw.api.taobao.com/router/rest', { params });
+    console.log('API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error in RTA consumer match: ', error);
+    throw error;
+  }
+}
+
+module.exports = rtaConsumerMatch;
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/services/optimusPromotionService.js 用于获取权益物料的精选推广信息
+
+const axios = require('axios');
+const crypto = require('crypto');
+require('dotenv').config();
+
+// 从环境变量中读取淘宝客API的AppKey和AppSecret
+const APP_KEY = process.env.TBK_APP_KEY;
+const APP_SECRET = process.env.TBK_APP_SECRET;
+
+/**
+ * 使用MD5算法生成签名
+ * @param {Object} params - 请求参数
+ * @return {string} - 签名字符串
+ */
+function generateSignature(params) {
+  const orderedParams = Object.keys(params).sort().map(key => `${key}${params[key]}`).join('');
+  return crypto.createHash('md5').update(APP_SECRET + orderedParams + APP_SECRET, 'utf8').digest('hex').toUpperCase();
+}
+
+/**
+ * 获取权益物料的精选推广信息
+ * @param {Object} options - 请求选项，未指定则使用默认值
+ * @return {Promise<Object>} - 调用API后返回的数据或错误对象
+ */
+async function getOptimusPromotion(options = {}) {
+  const defaultOptions = {
+    adzone_id: '', // 推广位ID，必填参数
+    promotion_scene_id: '', // 权益物料场景ID，必填参数
+    // 其他默认参数如分页等可以在这里设置
+  };
+
+  const finalOptions = {
+    ...defaultOptions,
+    ...options,
+    method: 'taobao.tbk.dg.optimus.promotion',
+    app_key: APP_KEY,
+    timestamp: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
+    format: 'json',
+    v: '2.0',
+    sign_method: 'md5'
+  };
+
+  finalOptions.sign = generateSignature(finalOptions); // 生成签名
+
+  try {
+    const response = await axios.get('http://gw.api.taobao.com/router/rest', { params: finalOptions });
+    console.log('API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting optimus promotion: ', error);
+    throw error;
+  }
+}
+
+module.exports = getOptimusPromotion;
+-----------------------------   分隔符   ---------------------
+
+// 路径: /src/services/tbkService.js 基本搜索模块
+// 为控制器提供了一个清晰的接口来执行业务操作。它还可以被复用于不同的控制器，以便在不同的场景中使用。
+
+const axios = require('axios');
+const crypto = require('crypto');
+require('dotenv').config();
+
+// 从环境变量获取配置的API密钥和密钥
+const APP_KEY = process.env.TBK_APP_KEY;      // 您在淘宝开放平台申请的 App Key
+const APP_SECRET = process.env.TBK_APP_SECRET;// 您在淘宝开放平台申请的 App Secret
+const ADZONE_ID = process.env.TBK_ADZONE_ID;  // 推广位ID
+
+// 生成API签名
+const generateSign = (params) => {
+  params = {
+    ...params,
+    app_key: APP_KEY,
+    timestamp: new Date().toISOString().replace(/-\d{2}T/, ' ').slice(0, -5),
+    format: 'json',
+    v: '2.0',
+    sign_method: 'md5'
+  };
+  const orderedParams = Object.keys(params).sort().reduce((acc, key) => `${acc}${key}${params[key]}`, '');
+  const signString = APP_SECRET + orderedParams + APP_SECRET;
+  return crypto.createHash('md5').update(signString).digest('hex').toUpperCase();
+};
+
+// 搜索商品
+const searchProducts = async (keywords) => {
+  const queryParams = {
+    method: 'taobao.tbk.dg.material.optional',
+    adzone_id: ADZONE_ID,
+    q: keywords,  // 搜索关键词
+  };
+  
+  // 添加签名
+  queryParams.sign = generateSign(queryParams);
+
+  // 发起API请求
+  try {
+    const response = await axios.get('http://gw.api.taobao.com/router/rest', { params: queryParams });
+    return response.data;
+  } catch (error) {
+    console.error('搜索商品失败:', error);
+    throw error;
+  }
+};
+
+module.exports = searchProducts;
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/services/activityInfoService.js 获取官方活动推广链接的服务模块
+
+const axios = require('axios');
+const crypto = require('crypto');
+require('dotenv').config();
+
+// 从环境变量中读取淘宝客API的AppKey和AppSecret
+const APP_KEY = process.env.TBK_APP_KEY;
+const APP_SECRET = process.env.TBK_APP_SECRET;
+
+/**
+ * 使用MD5算法生成签名
+ * @param {Object} params - 请求参数
+ * @return {string} - 签名字符串
+ */
+function generateSignature(params) {
+  // 把参数按照参数名的字母顺序排序
+  const orderedParams = Object.keys(params).sort().map(key => `${key}${params[key]}`).join('');
+  // 在字符串前后添加AppSecret进行MD5加密生成签名，转大写
+  return crypto.createHash('md5').update(APP_SECRET + orderedParams + APP_SECRET, 'utf8').digest('hex').toUpperCase();
+}
+
+/**
+ * 获取官方活动推广链接
+ * @param {string} activityMaterialId - 官方活动物料Id
+ * @param {string} adZoneId - 推广位id
+ * @return {Promise<Object>} - 调用API后返回的数据或错误对象
+ */
+async function getActivityInfo(activityMaterialId, adZoneId) {
+  // 设置API公共和私有参数
+  const params = {
+    method: 'taobao.tbk.activity.info.get',
+    app_key: APP_KEY,
+    timestamp: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
+    format: 'json',
+    v: '2.0',
+    sign_method: 'md5',
+    adzone_id: adZoneId,
+    activity_material_id: activityMaterialId,
+  };
+
+  // 添加签名
+  params.sign = generateSignature(params);
+
+  // 发送GET请求到淘宝客API
+  try {
+    const response = await axios.get('http://gw.api.taobao.com/router/rest', { params });
+    console.log('API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting activity info: ', error);
+    throw error;
+  }
+}
+
+module.exports = getActivityInfo;
+-----------------------------   分隔符   ---------------------
+
+// 服务层文件路径: /src/services/searchService.js
+
+const tbkApiRequest = require('../utils/tbkApiRequest');
+
+exports.searchMaterials = async ({ keywords, sort, page, pageSize, adzoneId }) => {
+  try {
+    // API方法名称
+    const method = 'taobao.tbk.dg.material.optional';
+    
+    // 构建搜索API所需的参数
+    const params = {
+      q: keywords,
+      sort: sort,
+      start_row: (page - 1) * pageSize,
+      page_size: pageSize,
+      adzone_id: adzoneId // 推广位ID, 需要在环境变量中配置或通过其他方式获取
+    };
+
+    // 使用tbkApiRequest工具函数发起API请求
+    const response = await tbkApiRequest(method, params);
+
+    // 检查响应中是否有错误信息
+    if (response && response.error_response) {
+      throw new Error(response.error_response.sub_msg || 'Unknown error from TBK API');
+    }
+
+    // 提取并返回搜索结果
+    return response.result_list ? response.result_list.map_item : [];
+  } catch (error) {
+    console.error('Error searching TBK materials:', error);
+    throw error; // 异常情况应向上抛出，由控制器统一处理
+  }
+};
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/services/cpOrderDetailsService.js 用于查询服务费订单的明细
+
+const axios = require('axios');
+const crypto = require('crypto');
+require('dotenv').config();
+
+// 从环境变量中读取淘宝客API的AppKey和AppSecret
+const APP_KEY = process.env.TBK_APP_KEY;
+const APP_SECRET = process.env.TBK_APP_SECRET;
+
+/**
+ * 使用MD5算法生成签名
+ * @param {Object} params - 请求参数
+ * @return {string} - 签名字符串
+ */
+function generateSignature(params) {
+  const orderedParams = Object.keys(params).sort().map(key => `${key}${params[key]}`).join('');
+  return crypto.createHash('md5').update(APP_SECRET + orderedParams + APP_SECRET, 'utf8').digest('hex').toUpperCase();
+}
+
+/**
+ * 查询服务费订单明细
+ * @param {Object} options - 请求选项，未指定则使用默认值
+ * @return {Promise<Object>} - 调用API后返回的数据或错误对象
+ */
+async function getCpOrderDetails(options = {}) {
+  const defaultOptions = {
+    fields: 'tb_trade_parent_id,tb_trade_id,tk_commission_pre_fee_for_media_platform', // 查询字段，默认为必要字段
+    start_time: new Date().toISOString().split('T')[0] + ' 00:00:00', // 查询开始时间，默认为当天
+    end_time: new Date().toISOString().split('T')[0] + ' 23:59:59', // 查询结束时间，默认为当天
+    page_no: 1, // 页数，默认为1
+    page_size: 20, // 每页大小，默认为20，最大值100
+    // 其他可根据需要添加的默认参数
+  };
+
+  const finalOptions = {
+    ...defaultOptions,
+    ...options,
+    method: 'taobao.tbk.cp.order.details.get',
+    app_key: APP_KEY,
+    timestamp: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
+    format: 'json',
+    v: '2.0',
+    sign_method: 'md5'
+  };
+
+  finalOptions.sign = generateSignature(finalOptions); // 生成签名
+
+  try {
+    const response = await axios.get('http://gw.api.taobao.com/router/rest', { params: finalOptions });
+    console.log('API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting CP order details: ', error);
+    throw error;
+  }
+}
+
+module.exports = getCpOrderDetails;
+-----------------------------   分隔符   ---------------------
+
+// 示例文件路径: /src/services/statisticsService.js
+// 点击行为统计,关联数据库表user_action
+
+const UserAction = require('../models/userActionModel');
+
+exports.getProductClickCount = async (productId) => {
+  const count = await UserAction.count({
+    where: {
+      product_id: productId,
+      action_type: 'click'
+    }
+  });
+  
+  return count;
+};
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/routes/index.js
+
+const express = require('express');
+const productController = require('../controllers/productController');
+const orderController = require('../controllers/orderController');
+const promotionController = require('../controllers/promotionController');
+
+const router = express.Router();
+
+// 商品相关API
+router.get('/api/products/search', productController.searchProducts);
+router.post('/api/products/share/convert', productController.convertItemShare);
+router.get('/api/products/optimus/material', productController.getOptimusMaterial);
+
+// 订单相关API
+router.get('/api/orders/details', orderController.getOrderDetails);
+router.get('/api/orders/service/details', orderController.getCpOrderDetails);
+
+// 推广相关API
+router.get('/api/promotion/activity/info', promotionController.getActivityInfo);
+router.get('/api/promotion/optimus/promotion', promotionController.getOptimusPromotion);
+router.post('/api/promotion/tpwd/share/convert', promotionController.convertTpwdShare);
+
+module.exports = router;
+-----------------------------   分隔符   ---------------------
+
+// 路由文件路径: /src/routes/searchRoutes.js
+
+const express = require('express');
+const searchController = require('../controllers/searchController');
+const router = express.Router();
+
+// 绑定搜索物料请求到对应的控制器函数
+router.get('/search', searchController.searchMaterials);
+
+module.exports = router;
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/config/db.js
+
+const { Sequelize } = require('sequelize');
+const dotenv = require('dotenv');
+
+// 加载环境变量
+dotenv.config();
+
+// 创建数据库连接的实例
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+  host: process.env.DB_HOST,
+  dialect: process.env.DB_DIALECT, // 一般为 'mysql'|'sqlite'|'postgres'|'mssql' 等
+  port: process.env.DB_PORT,
+  logging: false, // 根据需要设置日志功能
+  // 其他数据库连接选项
+});
+
+module.exports = sequelize;
+-----------------------------   分隔符   ---------------------
+
+// 配置文件路径: /src/config/index.js
+
+const dotenv = require('dotenv');
+
+// 加载环境变量
+dotenv.config();
+
+module.exports = {
+  port: process.env.PORT,
+  db: {
+    uri: process.env.DB_URI,
+  },
+  api: {
+    key: process.env.API_KEY,
+    secret: process.env.API_SECRET
+  },
+  // 其他全局配置变量
+};
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/controllers/productController.js 三种与商品相关的控制器
+
+const searchService = require('../services/searchService');
+const itemShareConvertService = require('../services/itemShareConvertService');
+const optimusMaterialService = require('../services/optimusMaterialService');
+
+class ProductController {
+  async searchProducts(req, res) {
+    try {
+      const { keywords } = req.query;
+      const products = await searchService(keywords);
+      res.json({ success: true, data: products });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "搜索商品出错", error: error.message });
+    }
+  }
+
+  async convertItemShare(req, res) {
+    try {
+      const { itemIds } = req.body;
+      const links = await itemShareConvertService({ num_iids: itemIds.join(',') });
+      res.json({ success: true, data: links });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "转换商品分享链接出错", error: error.message });
+    }
+  }
+
+  async getOptimusMaterial(req, res) {
+    try {
+      const { materialId } = req.query;
+      const materials = await optimusMaterialService({ material_id: materialId });
+      res.json({ success: true, data: materials });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "获取物料精选推广出错", error: error.message });
+    }
+  }
+}
+
+module.exports = new ProductController();
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/controllers/orderController.js 订单相关的服务模块控制器
+
+const orderDetailsService = require('../services/orderDetailsService');
+const cpOrderDetailsService = require('../services/cpOrderDetailsService');
+
+class OrderController {
+  async getOrderDetails(req, res) {
+    try {
+      const options = req.query; // 获取查询参数，如时间范围、页码等
+      const orderDetails = await orderDetailsService(options);
+      res.json({ success: true, data: orderDetails });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "查询订单详情出错", error: error.message });
+    }
+  }
+
+  async getCpOrderDetails(req, res) {
+    try {
+      const options = req.query; // 获取查询参数
+      const cpOrderDetails = await cpOrderDetailsService(options);
+      res.json({ success: true, data: cpOrderDetails });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "查询服务费订单明细出错", error: error.message });
+    }
+  }
+}
+
+module.exports = new OrderController();
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/controllers/promotionController.js 推广相关的服务模块控制器
+
+const activityInfoService = require('../services/activityInfoService');
+const optimusPromotionService = require('../services/optimusPromotionService');
+const tpwdShareConvertService = require('../services/tpwdShareConvertService');
+
+class PromotionController {
+  async getActivityInfo(req, res) {
+    try {
+      const { activityMaterialId, adZoneId } = req.query;
+      const activityInfo = await activityInfoService(activityMaterialId, adZoneId);
+      res.json({ success: true, data: activityInfo });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "获取活动信息出错", error: error.message });
+    }
+  }
+
+  async getOptimusPromotion(req, res) {
+    try {
+      const options = req.query;
+      const optimusPromotion = await optimusPromotionService(options);
+      res.json({ success: true, data: optimusPromotion });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "获取权益物料精选推广出错", error: error.message });
+    }
+  }
+
+  async convertTpwdShare(req, res) {
+    try {
+      const { passwordContent, adzoneId } = req.body;
+      const convertedLink = await tpwdShareConvertService({ password_content: passwordContent, adzone_id: adzoneId });
+      res.json({ success: true, data: convertedLink });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "淘口令解析转链出错", error: error.message });
+    }
+  }
+}
+
+module.exports = new PromotionController();
+-----------------------------   分隔符   ---------------------
+
+// 控制器文件路径: /src/controllers/searchController.js 
+// 淘宝客物料搜索控制器，从请求的查询参数中提取了必要的信息，并调用了服务层的searchMaterials函数，然后将结果返回给前端。
+
+const searchService = require('../services/searchService');
+
+// 处理物料搜索请求的控制器函数
+exports.searchMaterials = async (req, res) => {
+  try {
+    const { query, sort, page = 1, pageSize = 20 } = req.query;
+    const adzoneId = req.query.adzoneId || process.env.TBK_ADZONE_ID; //从查询参数或环境变量中获取推广位ID
+
+    // 调用服务层进行搜索
+    const materials = await searchService.searchMaterials({
+      keywords: query,
+      sort,
+      page,
+      pageSize,
+      adzoneId,
+    });
+
+    // 成功响应
+    res.status(200).json({
+      success: true,
+      data: materials,
+      message: 'Materials retrieved successfully',
+    });
+  } catch (error) {
+    // 错误响应
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error occurred while searching for materials',
+    });
+  }
+};
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/models/productModel.js
+// 商品模型 productModel.js
+
+const { Sequelize, Model, DataTypes } = require('sequelize');
+const sequelize = require('./index'); // 假设index.js配置了Sequelize实例
+
+class Product extends Model {}
+
+Product.init({
+  title: DataTypes.STRING,
+  description: DataTypes.TEXT,
+  price: DataTypes.DECIMAL(10, 2),
+  imageUrl: DataTypes.STRING,
+  category: DataTypes.STRING,
+  isPromoted: DataTypes.BOOLEAN,
+  promotionPriority: DataTypes.INTEGER
+}, { sequelize, modelName: 'product' });
+
+module.exports = Product;
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/models/userActionModel.js
+
+const { Sequelize, Model, DataTypes } = require('sequelize');
+const sequelize = require('./index');
+const User = require('./userModel');
+const Product = require('./productModel');
+
+class UserAction extends Model {}
+
+UserAction.init({
+  action_type: DataTypes.ENUM('click', 'view', 'wishlist', 'share'),
+  action_time: DataTypes.DATE
+}, { sequelize, modelName: 'userAction' });
+
+UserAction.belongsTo(User);
+UserAction.belongsTo(Product);
+
+module.exports = UserAction;
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/models/userModel.js
+
+const { Sequelize, Model, DataTypes } = require('sequelize');
+const sequelize = require('./index');
+
+class User extends Model {}
+
+User.init({
+  username: DataTypes.STRING,
+  email: DataTypes.STRING,
+  password_hash: DataTypes.STRING
+}, { sequelize, modelName: 'user' });
+
+module.exports = User;
+-----------------------------   分隔符   ---------------------
+
+// 文件路径：/src/utils/signUtils.js 签名逻辑
+const crypto = require('crypto');
+require('dotenv').config();
+
+/**
+ * 使用MD5算法生成签名
+ * @param {Object} params - 请求参数
+ * @return {string} - 签名字符串
+ */
+exports.generateSignature = (params) => {
+  const { APP_SECRET } = process.env; // 从.env文件读取APP_SECRET
+  const orderedParams = Object.keys(params).sort().map(key => `${key}${params[key]}`).join('');
+  return crypto.createHash('md5').update(APP_SECRET + orderedParams + APP_SECRET, 'utf8').digest('hex').toUpperCase();
+};
+-----------------------------   分隔符   ---------------------
+
+// 文件路径: /src/utils/tbkApiRequest.js
+// 用于实现与淘宝客API的交互。所有来自服务层的请求都应通过这个函数进行，确保签名的恰当性和参数的正确构建。
+
+const axios = require('axios');
+const crypto = require('crypto');
+const querystring = require('querystring');
+const config = require('../src/config');
+
+const tbkApiRequest = async (method, params) => {
+  // 混入公共参数
+  const publicParams = {
+    method: method,
+    app_key: config.api.key,
+    session: config.api.session,
+    format: 'json',
+    v: '2.0',
+    sign_method: 'md5',
+    timestamp: new Date().toISOString(),
+  };
+
+  // 合并所有参数，并按照淘宝客API的要求进行排序
+  const sortedParams = { ...publicParams, ...params };
+  const sortedKeys = Object.keys(sortedParams).sort();
+
+  // 构建用于签名的字符串
+  const signString = sortedKeys.reduce(
+    (acc, key) => `${acc}${key}${sortedParams[key]}`,
+    ''
+  );
+
+  // 签名的格式是: MD5(secret+paramString+secret).toUpperCase()
+  const md5 = crypto.createHash('md5');
+  const sign = md5
+    .update(config.api.secret + signString + config.api.secret)
+    .digest('hex')
+    .toUpperCase();
+
+  // 添加签名到参数中
+  const finalParams = { ...sortedParams, sign };
+
+  try {
+    // 发起请求
+    const response = await axios({
+      url: 'https://eco.taobao.com/router/rest',
+      method: 'post',
+      data: querystring.stringify(finalParams),
+    });
+
+    return response.data;
+  } catch (error) {
+    // 根据实际情况可能需要更详细的错误处理
+    console.error('Error during TBK API request:', error);
+    throw error;
+  }
+};
+
+module.exports = tbkApiRequest;
+-----------------------------   分隔符   ---------------------
+
+// actions.sql 行为统计表
+CREATE TABLE user_actions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  product_id INT,
+  action_type ENUM('click', 'view', 'wishlist', 'share') NOT NULL,
+  action_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+  -- 根据实际需求可能需要记录更详细的行为数据
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (product_id) REFERENCES products(id)
+);
+-----------------------------   分隔符   ---------------------
+
+// products.sql 商品信息表
+CREATE TABLE products (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  price DECIMAL(10, 2),
+  imageUrl VARCHAR(255),
+  category VARCHAR(50),
+  isPromoted BOOLEAN DEFAULT false,
+  promotionPriority INT DEFAULT 0,
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- 根据需要添加其他字段
+);
+
+-- 索引可以根据实际查询来设置，比如经常根据category和promotionPriority来查询可以创建相应的索引
+CREATE INDEX idx_category ON products (category);
+CREATE INDEX idx_promotionPriority ON products (promotionPriority);
+-----------------------------   分隔符   ---------------------
+
+// users.sql 数据库用户表 
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- 可增加更多用户相关字段
+);
